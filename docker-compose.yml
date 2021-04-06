@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  front:
+    container_name: front
+    build:
+      context: ./ohm-calculator
+      dockerfile: Dockerfile
+    volumes:
+      - './ohm-calculator/:/app'
+      - '/app/node_modules'
+    ports:
+      - 3001:3001
