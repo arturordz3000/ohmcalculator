@@ -18,11 +18,13 @@
     background-color: rgb(255, 165, 74);
     display: inline-block;
     text-align: left;
+    position: relative;
 }
 
 .Resistor-band {
     width: 10px;
     height: 100%;
-    position: relative;
+    position: absolute;
     display: inline-block;
+    cursor: pointer;
 }

@@ -6,7 +6,13 @@ function Resistor(props) {
 
     for (const [index, value] of bandsConfiguration.entries()) {
         const configuration = value;
-        bands.push(<div key={index} title={configuration.selectedColor.value.description} className="Resistor-band" style={{ left: configuration.position, backgroundColor: configuration.selectedColor.color }}></div>);
+        bands.push(
+            <div key={index} 
+                 title={configuration.color.value.description} 
+                 className="Resistor-band" 
+                 style={{ left: configuration.position, backgroundColor: configuration.color.rgb }}>
+            </div>
+        );
     }
 
     return (
