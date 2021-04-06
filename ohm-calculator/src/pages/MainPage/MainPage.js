@@ -4,8 +4,8 @@ import BandColorConfiguration from '../../models/BandColorConfiguration';
 
 function MainPage() {
     const bandsConfiguration = [
-        new BandColorConfiguration('First band', [{color: '#ff0000', value: 1}], '10px'),
-        new BandColorConfiguration('Second band', [{color: '#0000ff', value: 1}], '30px'),
+        new BandColorConfiguration('First band', [{color: '#ff0000', value: { description: '1', number: 1 }}], '20px'),
+        new BandColorConfiguration('Second band', [{color: '#0000ff', value: { description: '10KΩ', number: 10000 }}], '30px'),
     ];
 
     return (
