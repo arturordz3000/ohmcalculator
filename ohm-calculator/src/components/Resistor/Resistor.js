@@ -1,10 +1,10 @@
 import './Resistor.css';
 
 function Resistor(props) {
-    const bandsConfiguration = props.bandsConfiguration;
+    const resistorConfiguration = props.configuration;
     const bands = [];
 
-    for (const [index, value] of bandsConfiguration.entries()) {
+    for (const [index, value] of resistorConfiguration.entries()) {
         const configuration = value;
         bands.push(
             <div key={index} 

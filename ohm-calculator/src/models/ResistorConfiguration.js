@@ -1,8 +1,8 @@
-class ResistorBandColorConfiguration {
+class ResistorConfiguration {
     constructor(color, position) {
         this.color = color;
         this.position = position;
     }
 }
 
-export default ResistorBandColorConfiguration;
+export default ResistorConfiguration;
