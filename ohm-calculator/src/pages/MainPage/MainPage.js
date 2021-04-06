@@ -3,6 +3,8 @@ import Resistor from '../../components/Resistor/Resistor'
 import ResistorConfiguration from '../../models/ResistorConfiguration';
 import { useEffect, useState } from 'react';
 import BandColorSelector from '../../components/BandColorSelector/BandColorSelector';
+import Button from 'react-bootstrap/Button';
+import { Alert } from 'react-bootstrap';
 
 const numberColors = () => {
     return [
@@ -46,28 +48,77 @@ function MainPage() {
         new ResistorConfiguration({rgb: 'rgb(72, 136, 242)', value: { description: '±0.25%', number: 0.25 }}, '180px'),
     ];
 
-    const state = useState(configurations);
-    const [resistorConfigurations] = state;
+    const state = useState({ resistorConfiguration: configurations, isCalculating: false, calculationResult: null });
+    const [mainPageState] = state;
 
     return (
         <div className="MainPage">
             <header>
             <h1>Ohms Calculator</h1>
             </header>
-            <Resistor configuration={resistorConfigurations}/>
-            <BandColorSelector configuration={bandColorSelectorConfiguration} onColorSelected={(rowIndex, colorIndex) => onColorSelected(state, rowIndex, colorIndex)}/>
-            <button>Calculate</button>
+            <Resistor configuration={ mainPageState.resistorConfiguration }/>
+            <BandColorSelector configuration={ bandColorSelectorConfiguration } onColorSelected={ (rowIndex, colorIndex) => onColorSelected(state, rowIndex, colorIndex) }/>
+            { renderCalculateSection(state) }
+            { renderResultsSection(state) }
         </div>
     )
 }
 
 function onColorSelected(state, rowIndex, colorIndex) {
-    const [resistorConfigurations, setResistorConfigurations] = state;
-    const newConfigurations = [...resistorConfigurations];
+    const [mainPageState, setMainPageState] = state;
 
-    newConfigurations[rowIndex].color = bandColorSelectorConfiguration[rowIndex].colors[colorIndex];
+    const newMainPageState = { ...mainPageState };
+    newMainPageState.resistorConfiguration[rowIndex].color = bandColorSelectorConfiguration[rowIndex].colors[colorIndex];
 
-    setResistorConfigurations(newConfigurations);
+    setMainPageState(newMainPageState);
+}
+
+function renderCalculateSection(state) {
+    const [mainPageState] = state;
+    const isCalculating = mainPageState.isCalculating;
+
+    if (isCalculating) {
+        return (
+            <div className="MainPage-section">
+                Calculating...
+            </div>
+        );
+    } else {
+        return (
+            <div className="MainPage-section">
+                <Button variant="primary" onClick={() => onCalculateButtonClick(state)}>Calculate</Button>
+            </div>
+        );
+    }
+}
+
+function onCalculateButtonClick(state) {
+    const [mainPageState, setMainPageState] = state;
+
+    setMainPageState({ ...mainPageState, isCalculating: true, calculationResult: null });
+
+    setTimeout(() => setMainPageState({ ...mainPageState, isCalculating: false, calculationResult: { successful: true, response: '10KΩ ±0.25%' } }), 5000);
+}
+
+function renderResultsSection(state) {
+    const [mainPageState] = state;
+    const calculationResult = mainPageState.calculationResult;
+
+    if (calculationResult) {
+        if (calculationResult.successful) {
+            return (
+                <div className="MainPage-section">
+                    <Alert variant="success">Result: {calculationResult.response}</Alert>
+                </div>
+            );
+        } else {
+            return (
+                <div className="MainPage-section">
+                    <Alert variant="error">Error: {calculationResult.error}</Alert>
+                </div>
+            );
+        }
+    }
 }
 
 export default MainPage;
