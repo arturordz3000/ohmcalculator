@@ -46,7 +46,8 @@ function MainPage() {
         new ResistorConfiguration({rgb: 'rgb(72, 136, 242)', value: { description: '±0.25%', number: 0.25 }}, '180px'),
     ];
 
-    const [resistorConfigurations, setResistorConfigurations] = useState(configurations);
+    const state = useState(configurations);
+    const [resistorConfigurations] = state;
 
     return (
         <div className="MainPage">
@@ -54,9 +55,19 @@ function MainPage() {
             <h1>Ohms Calculator</h1>
             </header>
             <Resistor configuration={resistorConfigurations}/>
-            <BandColorSelector configuration={bandColorSelectorConfiguration} onColorSelected={(rowIndex, colorIndex) => alert(rowIndex + ',' + colorIndex)}/>
+            <BandColorSelector configuration={bandColorSelectorConfiguration} onColorSelected={(rowIndex, colorIndex) => onColorSelected(state, rowIndex, colorIndex)}/>
+            <button>Calculate</button>
         </div>
     )
+}
+
+function onColorSelected(state, rowIndex, colorIndex) {
+    const [resistorConfigurations, setResistorConfigurations] = state;
+    const newConfigurations = [...resistorConfigurations];
+
+    newConfigurations[rowIndex].color = bandColorSelectorConfiguration[rowIndex].colors[colorIndex];
+
+    setResistorConfigurations(newConfigurations);
 }
 
 export default MainPage;
