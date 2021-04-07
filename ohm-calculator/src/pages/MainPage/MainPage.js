@@ -6,6 +6,8 @@ import BandColorSelector from '../../components/BandColorSelector/BandColorSelec
 import Button from 'react-bootstrap/Button';
 import { Alert } from 'react-bootstrap';
 
+const apiUrl = 'http://localhost:3000'
+
 const numberColors = () => {
     return [
         {rgb: 'rgb(0, 0, 0)', value: { description: '0', number: 0 }},
@@ -48,8 +50,21 @@ function MainPage() {
         new ResistorConfiguration({rgb: 'rgb(72, 136, 242)', value: { description: '±0.25%', number: 0.25 }}, '180px'),
     ];
 
-    const state = useState({ resistorConfiguration: configurations, isCalculating: false, calculationResult: null });
-    const [mainPageState] = state;
+    //const state = useState({ resistorConfiguration: configurations, isCalculating: false, calculationResult: null });
+    const state = useState({ resistorConfiguration: [], isCalculating: false, calculationResult: null });
+    const [mainPageState, setMainPageState] = state;
+
+    useEffect(() => {
+        fetch(apiUrl + '/resistor/configuration')
+        .then(results => results.json())
+        .then(data => {
+            const configurations = [];
+            for (const configuration of data) {
+                configurations.push(new ResistorConfiguration({rgb: configuration.rgb, value: configuration.value}, configuration.position));
+            }
+            setMainPageState({...mainPageState, resistorConfiguration: configurations});
+        });
+    }, [])
 
     return (
         <div className="MainPage">
