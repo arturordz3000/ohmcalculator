@@ -36,30 +36,18 @@ describe('Db Service Module', function() {
 
     it('should insert into table', function(done) {
         const mockValues = [1, 'hello world', 1.5, 1.0, 'blob'];
-
-        const assertValues = (expected, actual) => {
-            assert(expected.length === actual.length);
-            for (let i = 0; i < expected.length; i++) {
-                assert.strictEqual(expected[i], actual[i]);
-            }
-        }
         
-        const testValues = [];
-
         const mockDb = {
             testValues: [],
             serialize: (callback) => callback(),
             prepare: (statement) => {
-                const expected = 'INSERT INTO test VALUES (?)';
+                const expected = 'INSERT INTO test VALUES (?, ?, ?, ?, ?)';
                 assert.strictEqual(statement, expected);
                 return {
+                    run: (values) => {
+                        assert.strictEqual(values, mockValues);
+                    },
                     finalize: () => done()
-                }
-            },
-            run: (value) => {
-                testValues.push(value);
-                if (testValues.length === mockValues) {
-                    assertValues(mockValues, testValues);
                 }
             }
         }

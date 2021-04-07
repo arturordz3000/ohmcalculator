@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node db-gen.js && node ./bin/www",
-    "test": "mocha tests/**/*.js"
+    "start": "node ./bin/www",
+    "test": "mocha tests/**/*.js",
+    "gen-db": "node db-gen.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
