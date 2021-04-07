@@ -18,6 +18,11 @@ function MainPage() {
     const [calculationState, setCalculationState] = calcState;
 
     useEffect(() => {
+        const onError = (err) => {
+            alert('An error occured. The page will be reloaded.');
+            window.location.reload();
+        };
+
         fetch(apiUrl + '/resistor/configuration')
         .then(results => results.json())
         .then(data => {
@@ -31,8 +36,8 @@ function MainPage() {
             .then(results => results.json())
             .then(data => {
                 setMainPageState({...mainPageState, resistorConfiguration: resistorConfigurations, bandColorSelectorConfiguration: data});
-            });
-        });
+            }, onError);
+        }, onError);
     }, []);
 
     useEffect(() => {
@@ -49,7 +54,7 @@ function MainPage() {
         .then(data => {
             setCalculationState({ isCalculating: false, calculationResult: { successful: true, response: data.result } });
         }, error => {
-            setCalculationState({ isCalculating: false, calculationResult: { successful: false, error: error } });
+            setCalculationState({ isCalculating: false, calculationResult: { successful: false, error: error.toString() } });
         });
     }, [calculate]);
 
