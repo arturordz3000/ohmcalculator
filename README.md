@@ -51,4 +51,4 @@ Wait until all the dependecies are installed and then run:
 The frontend application will run on `http://localhost:3001/`
 
 ## Database Installation
-There's no need to do anything additional to install the database. When the `npm start` command is executed to run the backend application, a script named `db-gen.js` is executed to generate a `default.db` database file which contains the tables and data needed by the application.
+There's no need to do anything additional to install the database. When the `npm start` command is executed to run the backend application, a script named `db-gen.js` is executed which generates a `default.db` database file that contains the tables and data needed by the application.
