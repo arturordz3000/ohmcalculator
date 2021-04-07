@@ -19,5 +19,10 @@ describe('/resistor/configuration', async () => {
             .expect(200);
 
         assert(response.body.length);
+        const first = response.body[0];
+        assert(first.rgb);
+        assert(first.position);
+        assert(first.value);
+        assert(first.value.description);
     });
 });

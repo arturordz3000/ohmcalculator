@@ -27,8 +27,8 @@ router.get('/', function(req, res, next) {
                     rgb: row.rgb,
                     position: row.position,
                     value: {
-                        description: row.description,
-                        number: row.number
+                        description: row.value_description,
+                        number: row.value_number
                     }
                 }
             });
