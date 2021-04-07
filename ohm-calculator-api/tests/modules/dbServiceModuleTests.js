@@ -72,21 +72,16 @@ describe('Db Service Module', function() {
 
         const mockDb = {
             serialize: (callback) => callback(),
-            each: (query, callback) => {
+            all: (query, callback) => {
                 assert.strictEqual(mockQuery, query);
-                for (const row of expectedResponse) {
-                    callback(null, row);
-                }
+                callback(null, expectedResponse)
             }
         }
 
         const service = dbServiceModule.init(mockDb);
-        const actualResponse = [];
 
-        service.query(mockQuery, (err, row) => {
-            actualResponse.push(row);
+        service.query(mockQuery, (err, rows) => {
+            assert.strictEqual(rows, expectedResponse)
         });
-
-        assert(actualResponse.length === expectedResponse.length);
     });
 });

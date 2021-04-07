@@ -2,13 +2,13 @@ function createTestDb() {
     var sqlite3 = require('sqlite3').verbose();
     var fs = require('fs');
 
-    if (fs.existsSync('../test.db')) {
-        fs.unlinkSync('../test.db');
+    if (fs.existsSync('test.db')) {
+        fs.unlinkSync('test.db');
     }
 
     var dbServiceModule = require('../modules/dbServiceModule');
 
-    var db = new sqlite3.Database('../test.db');
+    var db = new sqlite3.Database('test.db');
 
     console.log('Creating database...');
     const service = dbServiceModule.init(db);

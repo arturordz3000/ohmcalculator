@@ -17,9 +17,9 @@ function insert(table, values) {
     });
 }
 
-function query(sql, callback) {
+function query(sql, rowCallback) {
     this.db.serialize(() => {
-        this.db.each(sql, callback);
+        this.db.all(sql, rowCallback);
     });
 }
 
