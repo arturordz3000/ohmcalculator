@@ -1,6 +1,16 @@
 version: "3.8"
 
 services:
+  back:
+    container_name: back
+    build:
+      context: ./ohm-calculator-api
+      dockerfile: Dockerfile
+    volumes:
+      - './ohm-calculator-api/:/app'
+      - '/app/node_modules'
+    ports:
+      - 3000:3000
   front:
     container_name: front
     build:
