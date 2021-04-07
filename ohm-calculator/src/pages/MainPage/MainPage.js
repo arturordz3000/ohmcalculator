@@ -49,7 +49,7 @@ function MainPage() {
         .then(data => {
             setCalculationState({ isCalculating: false, calculationResult: { successful: true, response: data.result } });
         }, error => {
-            setCalculationState({ isCalculating: false, calculationResult: { successful: false, response: error } });
+            setCalculationState({ isCalculating: false, calculationResult: { successful: false, error: error } });
         });
     }, [calculate]);
 
