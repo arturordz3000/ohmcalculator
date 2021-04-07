@@ -1,5 +1,5 @@
-const calculatorModule = require('../modules/calculatorModule');
-var assert = require('assert')
+const calculatorModule = require('../../modules/calculatorModule');
+var assert = require('assert');
 
 describe('Calculator Module', function() {
 
