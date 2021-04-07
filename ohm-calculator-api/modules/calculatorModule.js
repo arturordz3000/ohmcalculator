@@ -1,7 +1,7 @@
 function calculateOhms(valueBands, multiplierBand, toleranceBand) {
     const ohms = valueBands * multiplierBand;
 
-    return getOhmsWithSuffix(ohms) + ' Ohms ' + toleranceBand + '%';
+    return getOhmsWithSuffix(ohms) + ' Ohms ±' + toleranceBand + '%';
 }
 
 const magnitudes = [

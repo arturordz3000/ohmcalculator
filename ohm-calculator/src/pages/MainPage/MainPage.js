@@ -8,50 +8,21 @@ import { Alert } from 'react-bootstrap';
 
 const apiUrl = 'http://localhost:3000'
 
-const numberColors = () => {
-    return [
-        {rgb: 'rgb(0, 0, 0)', value: { description: '0', number: 0 }},
-        {rgb: 'rgb(153, 117, 82)', value: { description: '1', number: 1 }},
-        {rgb: 'rgb(255, 57, 57)', value: { description: '2', number: 2 }},
-        {rgb: 'rgb(255, 165, 74)', value: { description: '3', number: 3 }},
-        {rgb: 'rgb(255, 255, 122)', value: { description: '4', number: 4 }},
-        {rgb: 'rgb(137, 255, 137)', value: { description: '5', number: 5 }},
-        {rgb: 'rgb(72, 136, 242)', value: { description: '6', number: 6 }},
-        {rgb: 'rgb(240, 144, 246)', value: { description: '7', number: 7 }},
-        {rgb: 'rgb(128, 128, 128)', value: { description: '8', number: 8 }},
-        {rgb: 'rgb(255, 255, 255)', value: { description: '9', number: 9 }}
-    ]
-}
-
-/*const bandColorSelectorConfiguration = [
-    {
-        name: 'First Band',
-        colors: numberColors()
-    },
-    {
-        name: 'Second Band',
-        colors: numberColors()
-    },
-    {
-        name: 'Multiplier',
-        colors: numberColors()
-    },
-    {
-        name: 'Tolerance',
-        colors: numberColors()
-    }
-]*/
-
 function MainPage() {
-    const state = useState({ resistorConfiguration: [], bandColorSelectorConfiguration: [], isCalculating: false, calculationResult: null });
+    const state = useState({ resistorConfiguration: [], bandColorSelectorConfiguration: [] });
     const [mainPageState, setMainPageState] = state;
+
+    const [calculate, setCalculate] = useState();
+
+    const calcState = useState({ isCalculating: false, calculationResult: null })
+    const [calculationState, setCalculationState] = calcState;
 
     useEffect(() => {
         fetch(apiUrl + '/resistor/configuration')
         .then(results => results.json())
         .then(data => {
             const resistorConfigurations = [];
-            
+
             for (const configuration of data) {
                 resistorConfigurations.push(new ResistorConfiguration({rgb: configuration.rgb, value: configuration.value}, configuration.position));
             }
@@ -64,6 +35,24 @@ function MainPage() {
         });
     }, []);
 
+    useEffect(() => {
+        if (!mainPageState.resistorConfiguration || !mainPageState.resistorConfiguration.length) {
+            return;
+        }
+        
+        const value = mainPageState.resistorConfiguration[0].color.value.number * 10 + mainPageState.resistorConfiguration[1].color.value.number;
+        const multiplier = mainPageState.resistorConfiguration[2].color.value.number;
+        const tolerance = mainPageState.resistorConfiguration[3].color.value.number;
+
+        fetch(apiUrl + `/calculator?value=${value}&multiplier=${multiplier}&tolerance=${tolerance}`)
+        .then(results => results.json())
+        .then(data => {
+            setCalculationState({ isCalculating: false, calculationResult: { successful: true, response: data.result } });
+        }, error => {
+            setCalculationState({ isCalculating: false, calculationResult: { successful: false, response: error } });
+        });
+    }, [calculate]);
+
     return (
         <div className="MainPage">
             <header>
@@ -71,8 +60,8 @@ function MainPage() {
             </header>
             <Resistor configuration={ mainPageState.resistorConfiguration }/>
             <BandColorSelector configuration={ mainPageState.bandColorSelectorConfiguration } onColorSelected={ (rowIndex, colorIndex) => onColorSelected(state, rowIndex, colorIndex) }/>
-            { renderCalculateSection(state) }
-            { renderResultsSection(state) }
+            { renderCalculateSection(calcState, setCalculate) }
+            { renderResultsSection(calcState) }
         </div>
     )
 }
@@ -86,9 +75,9 @@ function onColorSelected(state, rowIndex, colorIndex) {
     setMainPageState(newMainPageState);
 }
 
-function renderCalculateSection(state) {
-    const [mainPageState] = state;
-    const isCalculating = mainPageState.isCalculating;
+function renderCalculateSection(state, setCalculate) {
+    const [calculationState] = state;
+    const isCalculating = calculationState.isCalculating;
 
     if (isCalculating) {
         return (
@@ -99,23 +88,22 @@ function renderCalculateSection(state) {
     } else {
         return (
             <div className="MainPage-section">
-                <Button variant="primary" onClick={() => onCalculateButtonClick(state)}>Calculate</Button>
+                <Button variant="primary" onClick={() => onCalculateButtonClick(state, setCalculate)}>Calculate</Button>
             </div>
         );
     }
 }
 
-function onCalculateButtonClick(state) {
-    const [mainPageState, setMainPageState] = state;
+function onCalculateButtonClick(state, setCalculate) {
+    const [calculationState, setCalculationState] = state;
 
-    setMainPageState({ ...mainPageState, isCalculating: true, calculationResult: null });
-
-    setTimeout(() => setMainPageState({ ...mainPageState, isCalculating: false, calculationResult: { successful: true, response: '10KΩ ±0.25%' } }), 5000);
+    setCalculate({});
+    setCalculationState({ isCalculating: true, calculationResult: null });
 }
 
 function renderResultsSection(state) {
-    const [mainPageState] = state;
-    const calculationResult = mainPageState.calculationResult;
+    const [calculationResultState] = state;
+    const calculationResult = calculationResultState.calculationResult;
 
     if (calculationResult) {
         if (calculationResult.successful) {
