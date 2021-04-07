@@ -3,23 +3,24 @@ const request = require('supertest');
 
 const express = require('express');
 const app = express();
-var router = require('../../routes/resistorConfiguration');
+var router = require('../../routes/colorSelectorConfiguration');
 const { assert } = require('chai');
-app.use('/resistor/configuration', router);
+app.use('/colorSelector/configuration', router);
 
-describe('/resistor/configuration', async () => {
+describe('/colorSelector/configuration', async () => {
     it('GET responds with json', async () => {
         const response = await request(app)
-            .get('/resistor/configuration')
+            .get('/colorSelector/configuration')
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(200);
 
         assert(response.body.length);
         const first = response.body[0];
-        assert(first.rgb);
-        assert(first.position);
-        assert(first.value);
-        assert(first.value.description);
+        assert(first.name);
+        assert(first.colors);
+        assert(first.colors.length);
+        assert(first.colors[0].rgb);
+        assert(first.colors[0].value);
     });
 });

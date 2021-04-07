@@ -6,7 +6,7 @@ var dbServiceModule = require('../modules/dbServiceModule');
 var dbService = null;
 
 if (process.env.NODE_ENV === 'test') {
-    var db = new sqlite3.Database('../test.db');
+    var db = new sqlite3.Database('test.db');
     dbService = dbServiceModule.init(db);
 } else {
     dbService = dbServiceModule.init();

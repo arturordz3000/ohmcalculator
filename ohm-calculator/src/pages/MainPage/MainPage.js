@@ -23,7 +23,7 @@ const numberColors = () => {
     ]
 }
 
-const bandColorSelectorConfiguration = [
+/*const bandColorSelectorConfiguration = [
     {
         name: 'First Band',
         colors: numberColors()
@@ -40,31 +40,29 @@ const bandColorSelectorConfiguration = [
         name: 'Tolerance',
         colors: numberColors()
     }
-]
+]*/
 
 function MainPage() {
-    const configurations = [
-        new ResistorConfiguration({rgb: 'rgb(0, 0, 0)', value: { description: '0', number: 0 }}, '20px'),
-        new ResistorConfiguration({rgb: 'rgb(153, 117, 82)', value: { description: '1', number: 1 }}, '40px'),
-        new ResistorConfiguration({rgb: 'rgb(255, 255, 122)', value: { description: '10KΩ', number: 10000 }}, '60px'),
-        new ResistorConfiguration({rgb: 'rgb(72, 136, 242)', value: { description: '±0.25%', number: 0.25 }}, '180px'),
-    ];
-
-    //const state = useState({ resistorConfiguration: configurations, isCalculating: false, calculationResult: null });
-    const state = useState({ resistorConfiguration: [], isCalculating: false, calculationResult: null });
+    const state = useState({ resistorConfiguration: [], bandColorSelectorConfiguration: [], isCalculating: false, calculationResult: null });
     const [mainPageState, setMainPageState] = state;
 
     useEffect(() => {
         fetch(apiUrl + '/resistor/configuration')
         .then(results => results.json())
         .then(data => {
-            const configurations = [];
+            const resistorConfigurations = [];
+            
             for (const configuration of data) {
-                configurations.push(new ResistorConfiguration({rgb: configuration.rgb, value: configuration.value}, configuration.position));
+                resistorConfigurations.push(new ResistorConfiguration({rgb: configuration.rgb, value: configuration.value}, configuration.position));
             }
-            setMainPageState({...mainPageState, resistorConfiguration: configurations});
+
+            fetch(apiUrl + '/colorSelector/configuration')
+            .then(results => results.json())
+            .then(data => {
+                setMainPageState({...mainPageState, resistorConfiguration: resistorConfigurations, bandColorSelectorConfiguration: data});
+            });
         });
-    }, [])
+    }, []);
 
     return (
         <div className="MainPage">
@@ -72,7 +70,7 @@ function MainPage() {
             <h1>Ohms Calculator</h1>
             </header>
             <Resistor configuration={ mainPageState.resistorConfiguration }/>
-            <BandColorSelector configuration={ bandColorSelectorConfiguration } onColorSelected={ (rowIndex, colorIndex) => onColorSelected(state, rowIndex, colorIndex) }/>
+            <BandColorSelector configuration={ mainPageState.bandColorSelectorConfiguration } onColorSelected={ (rowIndex, colorIndex) => onColorSelected(state, rowIndex, colorIndex) }/>
             { renderCalculateSection(state) }
             { renderResultsSection(state) }
         </div>
@@ -83,7 +81,7 @@ function onColorSelected(state, rowIndex, colorIndex) {
     const [mainPageState, setMainPageState] = state;
 
     const newMainPageState = { ...mainPageState };
-    newMainPageState.resistorConfiguration[rowIndex].color = bandColorSelectorConfiguration[rowIndex].colors[colorIndex];
+    newMainPageState.resistorConfiguration[rowIndex].color = mainPageState.bandColorSelectorConfiguration[rowIndex].colors[colorIndex];
 
     setMainPageState(newMainPageState);
 }

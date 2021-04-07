@@ -2,7 +2,9 @@ var sqlite3 = require('sqlite3').verbose();
 var fs = require('fs');
 
 if (fs.existsSync('default.db')) {
+    console.log('Deleting existing database...');
     fs.unlinkSync('default.db');
+    console.log('Existing database deleted!');
 }
 
 var dbServiceModule = require('./modules/dbServiceModule');
