@@ -1,18 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var calculatorModule = require('../modules/calculatorModule');
+var methodNotAllowedHandler = require('../handlers/methodNotAllowedHandler');
+var calculatorValidationHandler = require('../handlers/calculatorValidationHandler');
 
-function parametersValidator(value, multiplier, tolerance, res, next) {
-    if (!value || !multiplier || !tolerance) {
-        res.status(400).json({error: 'There are missing parameters.'});
-    } else {
-        next();
-    }
-}
-
-router.get('/', function(req, res, next) {
-    parametersValidator(req.query.value, req.query.multiplier, req.query.tolerance, res, next);
-}, function(req, res, next) {
+router.get('/', calculatorValidationHandler.handler, (req, res) => {
     const value = req.query.value;
     const multiplier = req.query.multiplier;
     const tolerance = req.query.tolerance;
@@ -22,9 +14,7 @@ router.get('/', function(req, res, next) {
     res.json({result: result});
 });
 
-router.get('/:value/:multiplier/:tolerance', function(req, res, next) {
-    parametersValidator(req.params.value, req.params.multiplier, req.params.tolerance, res, next);
-}, function (req, res, next) {
+router.get('/:value/:multiplier/:tolerance', (req, res) => {
     const value = req.params.value;
     const multiplier = req.params.multiplier;
     const tolerance = req.params.tolerance;
@@ -33,5 +23,8 @@ router.get('/:value/:multiplier/:tolerance', function(req, res, next) {
 
     res.json({result: result});
 });
+
+router.all('/', methodNotAllowedHandler.handle);
+router.all('/:value/:multiplier/:tolerance', methodNotAllowedHandler.handle);
 
 module.exports = router;

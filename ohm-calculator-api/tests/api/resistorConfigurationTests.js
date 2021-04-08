@@ -22,4 +22,13 @@ describe('/resistor/configuration', async () => {
         assert(first.value);
         assert(first.value.description);
     });
+
+    it('should return 405 method not allowed', async() => {
+        const response = await request(app)
+            .post('/resistor/configuration')
+            .set('Accept', 'application/json')
+            .expect(405);
+
+        assert.strictEqual(response.body.error, 'Method Not Allowed.');
+    });
 });

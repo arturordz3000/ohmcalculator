@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import MainPage from './pages/MainPage/MainPage'
 
-function App() {
+const App = () => {
   return (
     <MainPage />
   );

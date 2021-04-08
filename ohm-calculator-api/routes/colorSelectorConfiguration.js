@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var sqlite3 = require('sqlite3').verbose();
 var dbServiceModule = require('../modules/dbServiceModule');
+var methodNotAllowedHandler = require('../handlers/methodNotAllowedHandler');
 
 var dbService = null;
 
@@ -12,13 +13,13 @@ if (process.env.NODE_ENV === 'test') {
     dbService = dbServiceModule.init();
 }
 
-function handleError(err, next) {
+const handleError = (err, next) => {
     if (err) {
         next(err);
     }
 }
 
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
     let colors = {};
     let configurations = {};
     let relationships = {};
@@ -31,6 +32,7 @@ router.get('/', function(req, res, next) {
             
             return accumulator;
         }, {});
+
         dbService.query('SELECT * from ColorSelectorConfigurations', colorSelectorConfigurationsCallback);
     }
 
@@ -52,6 +54,7 @@ router.get('/', function(req, res, next) {
 
             return accumulator;
         }, {});
+        
         mergeAndRespond();
     }
 
@@ -67,5 +70,7 @@ router.get('/', function(req, res, next) {
 
     dbService.query('SELECT * from Colors', colorsCallback);
 });
+
+router.all('/', methodNotAllowedHandler.handle);
 
 module.exports = router;

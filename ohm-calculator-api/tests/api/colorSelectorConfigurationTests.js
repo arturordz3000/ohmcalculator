@@ -23,4 +23,13 @@ describe('/colorSelector/configuration', async () => {
         assert(first.colors[0].rgb);
         assert(first.colors[0].value);
     });
+
+    it('should return 405 method not allowed', async() => {
+        const response = await request(app)
+            .post('/colorSelector/configuration')
+            .set('Accept', 'application/json')
+            .expect(405);
+
+        assert.strictEqual(response.body.error, 'Method Not Allowed.');
+    });
 });

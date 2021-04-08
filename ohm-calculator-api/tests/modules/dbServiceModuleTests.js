@@ -1,20 +1,20 @@
 var dbServiceModule = require('../../modules/dbServiceModule');
 var assert = require('assert');
 
-describe('Db Service Module', function() {
-    it('should initialize service with existing database instance', function() {
+describe('Db Service Module', () => {
+    it('should initialize service with existing database instance', () => {
         const db = {};
         const service = dbServiceModule.init(db);
         assert.deepStrictEqual(db, service.db);
     });
 
-    it('should initialize service and create new database instance', function() {
+    it('should initialize service and create new database instance', () => {
         const service = dbServiceModule.init();
         assert(service.db);
         service.db.close();
     });
 
-    it('should create table', function(done) {
+    it('should create table', (done) => {
         const mockDb = {
             serialize: (callback) => callback(),
             run: (statement) => {
@@ -34,7 +34,7 @@ describe('Db Service Module', function() {
         ]);
     });
 
-    it('should insert into table', function(done) {
+    it('should insert into table', (done) => {
         const mockValues = [1, 'hello world', 1.5, 1.0, 'blob'];
         
         const mockDb = {
@@ -57,7 +57,7 @@ describe('Db Service Module', function() {
         service.insert('test', mockValues);
     });
 
-    it('should query database with successful response', function() {
+    it('should query database with successful response', () => {
         const mockQuery = 'SELECT rowid AS id, info FROM test';
         const expectedResponse = [{id: 1, info: 'good'}, {id: 2, info: 'test'}];
 

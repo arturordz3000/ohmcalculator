@@ -1,9 +1,9 @@
 const calculatorModule = require('../../modules/calculatorModule');
 var assert = require('assert');
 
-describe('Calculator Module', function() {
+describe('Calculator Module', () => {
 
-    it('should return correct ohm values based band colors when result is ohms', function() {
+    it('should return correct ohm values based band colors when result is ohms', () => {
         let valueBands = 5;
         let multiplierBand = 100;
         let toleranceBand = 1;
@@ -19,7 +19,7 @@ describe('Calculator Module', function() {
         assert.strictEqual(result, '210 Ohms ±2%');
     });
 
-    it('should return correct ohm values based band colors when result is kilo ohms', function() {
+    it('should return correct ohm values based band colors when result is kilo ohms', () => {
         let valueBands = 5;
         let multiplierBand = 100000;
         let toleranceBand = 1;
@@ -35,7 +35,7 @@ describe('Calculator Module', function() {
         assert.strictEqual(result, '21k Ohms ±2%');
     });
 
-    it('should return correct ohm values based band colors when result is mega ohms', function() {
+    it('should return correct ohm values based band colors when result is mega ohms', () => {
         let valueBands = 5;
         let multiplierBand = 1e6;
         let toleranceBand = 1;
@@ -51,7 +51,7 @@ describe('Calculator Module', function() {
         assert.strictEqual(result, '210M Ohms ±2%');
     });
 
-    it('should return correct ohm values based band colors when result is giga ohms', function() {
+    it('should return correct ohm values based band colors when result is giga ohms', () => {
         let valueBands = 5;
         let multiplierBand = 1e9;
         let toleranceBand = 1;

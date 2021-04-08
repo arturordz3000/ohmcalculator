@@ -8,7 +8,7 @@ import { Alert } from 'react-bootstrap';
 
 const apiUrl = 'http://localhost:3000'
 
-function MainPage() {
+const MainPage = () => {
     const state = useState({ resistorConfiguration: [], bandColorSelectorConfiguration: [] });
     const [mainPageState, setMainPageState] = state;
 
@@ -71,7 +71,7 @@ function MainPage() {
     )
 }
 
-function onColorSelected(state, rowIndex, colorIndex) {
+const onColorSelected = (state, rowIndex, colorIndex) => {
     const [mainPageState, setMainPageState] = state;
 
     const newMainPageState = { ...mainPageState };
@@ -80,7 +80,7 @@ function onColorSelected(state, rowIndex, colorIndex) {
     setMainPageState(newMainPageState);
 }
 
-function renderCalculateSection(state, setCalculate) {
+const renderCalculateSection = (state, setCalculate) => {
     const [calculationState] = state;
     const isCalculating = calculationState.isCalculating;
 
@@ -99,14 +99,14 @@ function renderCalculateSection(state, setCalculate) {
     }
 }
 
-function onCalculateButtonClick(state, setCalculate) {
+const onCalculateButtonClick = (state, setCalculate) => {
     const [calculationState, setCalculationState] = state;
 
     setCalculate({});
     setCalculationState({ isCalculating: true, calculationResult: null });
 }
 
-function renderResultsSection(state) {
+const renderResultsSection = (state) => {
     const [calculationResultState] = state;
     const calculationResult = calculationResultState.calculationResult;
 

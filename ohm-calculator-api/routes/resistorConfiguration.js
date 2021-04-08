@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var sqlite3 = require('sqlite3').verbose();
 var dbServiceModule = require('../modules/dbServiceModule');
+var methodNotAllowedHandler = require('../handlers/methodNotAllowedHandler');
 
 var dbService = null;
 
@@ -12,12 +13,11 @@ if (process.env.NODE_ENV === 'test') {
     dbService = dbServiceModule.init();
 }
 
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
     dbService.query('SELECT resistor_default_id, position, rgb, value_description, value_number FROM ResistorDefaults RD INNER JOIN Colors C ON RD.color_id = C.color_id',
         (err, rows) => {
             if (err) {
-                next(err);
-                return;
+                return next(err);
             }
 
             let resistorConfiguration = rows;
@@ -37,5 +37,7 @@ router.get('/', function(req, res, next) {
         }
     );
 });
+
+router.all('/', methodNotAllowedHandler.handle);
 
 module.exports = router;
